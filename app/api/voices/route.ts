@@ -1,37 +1,12 @@
 import { EdgeTTSService } from "@/service/edge-tts-service"
 import { applyRateLimit, voicesRateLimiter } from "../utils/rate-limiter"
 import { logger } from "../utils/logger"
+import { verifyBearerToken, jsonError } from "../utils/auth"
 
 // Force this route to be dynamic
 export const dynamic = 'force-dynamic'
 
 // ============ Utility Functions ============
-
-function verifyBearerToken(request: Request): { authorized: boolean; error?: string } {
-    const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
-
-    if (!requiredToken) {
-        return { authorized: true }
-    }
-
-    const authorization = request.headers.get('authorization')
-
-    if (!authorization) {
-        return { authorized: false, error: 'Missing Authorization header' }
-    }
-
-    if (!authorization.startsWith('Bearer ')) {
-        return { authorized: false, error: 'Invalid Authorization format. Expected: Bearer <token>' }
-    }
-
-    const token = authorization.substring(7)
-
-    if (token !== requiredToken) {
-        return { authorized: false, error: 'Invalid token' }
-    }
-
-    return { authorized: true }
-}
 
 function jsonResponse(data: unknown, status: number = 200, additionalHeaders?: Record<string, string>): Response {
     return new Response(JSON.stringify(data), {
@@ -41,10 +16,6 @@ function jsonResponse(data: unknown, status: number = 200, additionalHeaders?: R
             ...additionalHeaders
         }
     })
-}
-
-function jsonError(message: string, status: number = 400, additionalHeaders?: Record<string, string>): Response {
-    return jsonResponse({ error: message }, status, additionalHeaders)
 }
 
 // ============ API Handler ============
@@ -101,7 +72,7 @@ export async function GET(request: Request) {
             200,
             {
                 ...rateLimitResult.headers,
-                'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+                'Cache-Control': 'public, max-age=3600',
             }
         )
     } catch (error) {
@@ -112,7 +83,6 @@ export async function GET(request: Request) {
             duration: `${duration}ms`,
         })
 
-        const message = error instanceof Error ? error.message : 'Internal server error'
-        return jsonError(message, 500)
+        return jsonError('Internal server error', 500)
     }
 }

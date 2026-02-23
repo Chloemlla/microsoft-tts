@@ -1,34 +1,9 @@
+import { verifyQueryToken, jsonError } from "../utils/auth"
+
 // Force this route to be dynamic
 export const dynamic = 'force-dynamic'
 
 // ============ Utility Functions ============
-
-function verifyQueryToken(searchParams: URLSearchParams): { authorized: boolean; error?: string } {
-    const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
-
-    if (!requiredToken) {
-        return { authorized: true }
-    }
-
-    const token = searchParams.get('token')
-
-    if (!token) {
-        return { authorized: false, error: 'Missing token parameter' }
-    }
-
-    if (token !== requiredToken) {
-        return { authorized: false, error: 'Invalid token' }
-    }
-
-    return { authorized: true }
-}
-
-function jsonError(message: string, status: number = 400): Response {
-    return new Response(JSON.stringify({ error: message }), {
-        status,
-        headers: { 'Content-Type': 'application/json' }
-    })
-}
 
 function jsonSuccess<T>(data: T): Response {
     return new Response(JSON.stringify(data), {
@@ -128,7 +103,6 @@ export async function GET(request: Request) {
         return jsonSuccess(data)
     } catch (error) {
         console.error('Legado import error:', error)
-        const message = error instanceof Error ? error.message : 'Internal server error'
-        return jsonError(message, 500)
+        return jsonError('Internal server error', 500)
     }
 }

@@ -32,7 +32,16 @@ export async function listVoices(locale?: string) {
     return voices ?? []
 }
 
+const MAX_TEXT_LENGTH = 10000
+
 export async function textToSpeach(text: string, options: TTSOptions) {
+    if (!text || text.trim().length === 0) {
+        throw new Error('Text is required')
+    }
+    if (text.length > MAX_TEXT_LENGTH) {
+        throw new Error(`Text too long (max ${MAX_TEXT_LENGTH} characters)`)
+    }
+
     try {
         const service = new EdgeTTSService()
         const data = await service.convert(text, options)

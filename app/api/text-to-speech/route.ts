@@ -2,49 +2,12 @@ import { EdgeTTSService } from "@/service/edge-tts-service"
 import { TTSOptions } from "@/service/tts-service"
 import { applyRateLimit, ttsRateLimiter } from "../utils/rate-limiter"
 import { logger } from "../utils/logger"
+import { verifyBearerToken, jsonError } from "../utils/auth"
 
 // Force this route to be dynamic since it uses request headers
 export const dynamic = 'force-dynamic'
 
-Error.stackTraceLimit = Infinity
-
 // ============ Utility Functions ============
-
-function verifyBearerToken(request: Request): { authorized: boolean; error?: string } {
-    const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
-
-    if (!requiredToken) {
-        return { authorized: true }
-    }
-
-    const authorization = request.headers.get('authorization')
-
-    if (!authorization) {
-        return { authorized: false, error: 'Missing Authorization header' }
-    }
-
-    if (!authorization.startsWith('Bearer ')) {
-        return { authorized: false, error: 'Invalid Authorization format. Expected: Bearer <token>' }
-    }
-
-    const token = authorization.substring(7)
-
-    if (token !== requiredToken) {
-        return { authorized: false, error: 'Invalid token' }
-    }
-
-    return { authorized: true }
-}
-
-function jsonError(message: string, status: number = 400, additionalHeaders?: Record<string, string>): Response {
-    return new Response(JSON.stringify({ error: message }), {
-        status,
-        headers: {
-            'Content-Type': 'application/json',
-            ...additionalHeaders
-        }
-    })
-}
 
 function parseNumberParam(
     searchParams: URLSearchParams,
@@ -190,7 +153,6 @@ export async function GET(request: Request) {
             duration: `${duration}ms`,
         })
 
-        const message = error instanceof Error ? error.message : 'Internal server error'
-        return jsonError(message, 500)
+        return jsonError('Internal server error', 500)
     }
 }

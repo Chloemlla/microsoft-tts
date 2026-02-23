@@ -1,6 +1,18 @@
 import { XMLBuilder } from "fast-xml-parser";
 
 /**
+ * Escape special XML characters to prevent SSML injection.
+ */
+function escapeXml(text: string): string {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+}
+
+/**
  * SSML Builder for Microsoft Edge TTS
  * Supports full SSML features including express-as, emphasis, break, etc.
  */
@@ -41,9 +53,10 @@ export class SSML {
     }
 
     toString(): string {
+        const safeText = escapeXml(this.text)
         let voiceContent: any = {
             "prosody": {
-                "text": this.text,
+                "text": safeText,
                 "@volume": `${this.volume}%`,
                 "@rate": `${this.rate}%`,
                 "@pitch": `${this.pitch}%`
@@ -121,7 +134,7 @@ export class SSMLBuilder {
      * Add plain text
      */
     text(content: string): this {
-        this.elements.push(content)
+        this.elements.push(escapeXml(content))
         return this
     }
 

@@ -1,13 +1,13 @@
 'use client'
 import { Toaster } from '@/components/shadcn/ui/toaster';
-// app/client/layout.tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const queryClient = new QueryClient()
+import { useState } from 'react';
 
 export function Providers(
   { children }: { children: React.ReactNode }
 ) {
+  // Create QueryClient per component instance to avoid cross-request state leaks in SSR
+  const [queryClient] = useState(() => new QueryClient())
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -15,5 +15,4 @@ export function Providers(
       <Toaster />
     </QueryClientProvider>
   );
-
 }

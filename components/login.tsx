@@ -35,8 +35,8 @@ export default function Page() {
         try {
             const result = await login(data.token)
             if (result && result.success) {
-                // 保存token到localStorage
-                localStorage.setItem('auth_token', result.token)
+                // 保存用户输入的token（服务端不再返回token明文）
+                localStorage.setItem('auth_token', data.token)
                 router.push('/')
             } else {
                 form.setError('root', { type: 'manual', message: '令牌无效' })

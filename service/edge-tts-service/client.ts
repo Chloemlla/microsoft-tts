@@ -133,12 +133,14 @@ export class EdgeTTSClient {
 
     public static async convert(ssml: string, options: ClientOptions): Promise<ConvertResult> {
         console.debug('start convert', JSON.stringify(ssml), JSON.stringify(options))
+        let wsRef: WebSocket | null = null
         let convertResult = new Promise<ConvertResult>(async (resolve, reject) => {
             try {
                 let audio = new ArrayBuffer(0)
                 let metadata: any = []
                 const requestId = this.generateId()
                 const ws = await this.createWS()
+                wsRef = ws
                 ws.onclose = (r) => {
                     console.debug(`Websocket closed with ${r.code}`)
                     if (r.code !== 1000) {
@@ -242,10 +244,14 @@ export class EdgeTTSClient {
         const result: Promise<ConvertResult> = Promise.race([
             convertResult,
             new Promise<ConvertResult>((_, reject) => {
-                // 如果超过 60 秒没有返回结果，则清除请求并返回超时
+                // 60 秒超时，避免资源长时间占用
                 setTimeout(() => {
+                    // 超时后关闭 WebSocket 连接，防止资源泄漏
+                    if (wsRef && wsRef.readyState === WebSocket.OPEN) {
+                        wsRef.close(1000, '请求超时')
+                    }
                     reject(new Error('请求超时'))
-                }, 600000)
+                }, 60000)
             }),
         ])
 

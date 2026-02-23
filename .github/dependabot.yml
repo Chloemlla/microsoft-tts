@@ -1,0 +1,19 @@
+# 要开始使用 Dependabot 版本更新，您需要指定要更新的
+# 软件包生态系统以及软件包清单文件的位置。
+# 有关所有配置选项，请参阅文档：
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # 依赖更新
+  - package-ecosystem: "yarn"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 100
+    labels:
+      - "dependencies"
+      - "yarn"
+    commit-message:
+      prefix: "yarn"
+      include: "scope"
