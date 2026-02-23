@@ -5,15 +5,13 @@
 
 version: 2
 updates:
-  # 依赖更新
-  - package-ecosystem: "yarn"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 100
     labels:
       - "dependencies"
-      - "yarn"
     commit-message:
-      prefix: "yarn"
+      prefix: "deps"
       include: "scope"
