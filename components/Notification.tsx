@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 export interface NotificationData {
     message: string;
@@ -187,9 +187,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     // 组件卸载时清理所有计时器
     React.useEffect(() => {
+        const timers = timersRef.current;
         return () => {
-            timersRef.current.forEach(timer => clearTimeout(timer));
-            timersRef.current.clear();
+            timers.forEach(timer => clearTimeout(timer));
+            timers.clear();
         };
     }, []);
 
