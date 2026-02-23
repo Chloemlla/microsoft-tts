@@ -93,6 +93,63 @@ GET /api/text-to-speech?voice=Microsoft+Server+Speech+Text+to+Speech+Voice+(zh-C
 
 如果需要防止他人滥用你的部署的服务，可以在应用的环境变量中添加 `TOKEN`，然后在请求头中添加 `Authorization: Bearer <TOKEN>`访问。
 
+### 安全相关环境变量
+
+以下环境变量用于增强部署安全性，建议在生产环境中配置：
+
+| 环境变量 | 说明 | 默认值 |
+|---|---|---|
+| `TOKEN` 或 `MS_RA_FORWARDER_TOKEN` | 访问令牌，**生产环境强烈建议设置**。未设置时所有请求无需认证。 | 无（不鉴权） |
+| `TRUSTED_PROXY_HEADER` | 指定可信的代理 IP header 名称（如 `cf-connecting-ip`、`x-real-ip`）。设置后限流器仅信任该 header 获取客户端 IP，防止 `X-Forwarded-For` 伪造绕过限流。 | 无（按优先级依次尝试常见 header） |
+| `CORS_ORIGIN` | 允许跨域访问 API 的来源域名（如 `https://example.com`）。未设置时 API 不返回 CORS 允许头。 | 空（不允许跨域） |
+| `EDGE_CHROMIUM_VERSION` | Edge 浏览器版本号，用于 TTS 接口认证。微软更换版本时可通过此变量更新，无需重新部署。 | `130.0.2849.68` |
+| `EDGE_TRUSTED_CLIENT_TOKEN` | Edge TTS 接口的 Client Token。微软更换 token 时可通过此变量更新。 | `6A5AA1D4EAFF4E9FB37E23D68491D6F4` |
+| `LOG_LEVEL` | 日志级别：`DEBUG`、`INFO`、`WARN`、`ERROR`。 | `INFO` |
+
+#### 生产环境部署示例
+
+```bash
+docker run --name ms-ra-forwarder -d -p 3000:3000 \
+  -e TOKEN=你的安全令牌 \
+  -e TRUSTED_PROXY_HEADER=x-real-ip \
+  -e NODE_ENV=production \
+  wxxxcxx/ms-ra-forwarder
+```
+
+```yaml
+# docker-compose.yml
+services:
+  ms-ra-forwarder:
+    container_name: ms-ra-forwarder
+    image: wxxxcxx/ms-ra-forwarder:latest
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      - TOKEN=你的安全令牌
+      - TRUSTED_PROXY_HEADER=x-real-ip
+      - NODE_ENV=production
+```
+
+#### 反向代理配置建议
+
+如果使用 nginx 等反向代理，请确保：
+
+1. 剥离客户端发送的 `X-Forwarded-For`、`X-Real-IP` 等 header，由代理自行设置
+2. 将 `TRUSTED_PROXY_HEADER` 设置为代理写入的 header 名称
+
+nginx 示例：
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;  # 覆盖而非追加
+    proxy_set_header Host $host;
+}
+```
+
+Cloudflare 用户可直接设置 `TRUSTED_PROXY_HEADER=cf-connecting-ip`。
+
 ## 其他说明
 
 - 微软官方的 Azure TTS 服务目前拥有一定的免费额度，如果免费额度对你来说够用的话，请支持官方的服务。
