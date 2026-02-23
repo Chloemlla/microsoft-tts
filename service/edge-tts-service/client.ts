@@ -3,8 +3,8 @@ import axios from 'axios'
 import { createHash } from 'node:crypto'
 import { WebSocket } from 'ws'
 
-export const CHROMIUM_FULL_VERSION = '130.0.2849.68'
-export const TRUSTED_CLIENT_TOKEN = '6A5AA1D4EAFF4E9FB37E23D68491D6F4'
+export const CHROMIUM_FULL_VERSION = process.env.EDGE_CHROMIUM_VERSION || '130.0.2849.68'
+export const TRUSTED_CLIENT_TOKEN = process.env.EDGE_TRUSTED_CLIENT_TOKEN || '6A5AA1D4EAFF4E9FB37E23D68491D6F4'
 const WINDOWS_FILE_TIME_EPOCH = 11644473600n
 
 class MessageHeader {

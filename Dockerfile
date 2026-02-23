@@ -1,5 +1,5 @@
 # ─── 基础镜像：安装依赖 ─────────────────────────────────────────
-FROM node:23-slim AS base
+FROM node:24-slim AS base
 
 # 安装 pnpm
 RUN npm install -g pnpm
@@ -26,7 +26,7 @@ COPY tailwind.config.ts postcss.config.mjs next.config.mjs ./
 RUN pnpm run build
 
 # ─── 运行阶段：Standalone 输出 ────────────────────────────────────
-FROM node:23-slim AS runner
+FROM node:24-slim AS runner
 
 WORKDIR /app
 

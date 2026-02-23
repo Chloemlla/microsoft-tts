@@ -16,11 +16,17 @@ function safeCompare(a: string, b: string): boolean {
 /**
  * Verify Bearer token from Authorization header.
  * Uses constant-time comparison to prevent timing attacks.
+ * 
+ * WARNING: If neither MS_RA_FORWARDER_TOKEN nor TOKEN env var is set,
+ * all requests are authorized. Set one of these in production.
  */
 export function verifyBearerToken(request: Request): { authorized: boolean; error?: string } {
     const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
 
     if (!requiredToken) {
+        if (process.env.NODE_ENV === 'production') {
+            console.warn('[SECURITY] No MS_RA_FORWARDER_TOKEN or TOKEN env var set. All requests are authorized. Set a token for production use.')
+        }
         return { authorized: true }
     }
 
@@ -46,11 +52,17 @@ export function verifyBearerToken(request: Request): { authorized: boolean; erro
 /**
  * Verify token from query parameter (for Legado import).
  * Uses constant-time comparison to prevent timing attacks.
+ * 
+ * WARNING: If neither MS_RA_FORWARDER_TOKEN nor TOKEN env var is set,
+ * all requests are authorized. Set one of these in production.
  */
 export function verifyQueryToken(searchParams: URLSearchParams): { authorized: boolean; error?: string } {
     const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
 
     if (!requiredToken) {
+        if (process.env.NODE_ENV === 'production') {
+            console.warn('[SECURITY] No MS_RA_FORWARDER_TOKEN or TOKEN env var set. All requests are authorized. Set a token for production use.')
+        }
         return { authorized: true }
     }
 

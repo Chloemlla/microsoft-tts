@@ -59,7 +59,7 @@ export default function Page() {
                             <FormItem>
                                 <FormLabel>令牌</FormLabel>
                                 <FormControl>
-                                    <Input {...field} placeholder="请输入您的令牌" />
+                                    <Input {...field} type="password" placeholder="请输入您的令牌" autoComplete="off" />
                                 </FormControl>
                                 <FormDescription>
                                     输入您的令牌登录

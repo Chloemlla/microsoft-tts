@@ -100,10 +100,21 @@ export class SSML {
     }
 
     /**
-     * Validate if the input is already a valid SSML string
+     * Validate if the input is a valid SSML string.
+     * Checks structure beyond just start/end tags to prevent bypass.
      */
     static isSSML(text: string): boolean {
-        return text.trim().startsWith('<speak') && text.trim().endsWith('</speak>')
+        const trimmed = text.trim()
+        if (!trimmed.startsWith('<speak') || !trimmed.endsWith('</speak>')) {
+            return false
+        }
+        // Verify the opening tag is properly closed (e.g. <speak ...>)
+        const openTagEnd = trimmed.indexOf('>')
+        if (openTagEnd === -1) return false
+        // Ensure no nested <speak> tags (basic injection guard)
+        const inner = trimmed.slice(openTagEnd + 1, trimmed.lastIndexOf('</speak>'))
+        if (inner.includes('<speak')) return false
+        return true
     }
 
     /**
