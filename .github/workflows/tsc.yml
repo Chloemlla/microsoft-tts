@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm add -D @types/ws
-          pnpm install
+          pnpm install --no-frozen-lockfile
 
       - name: Install global tools
         run: npm install -g javascript-obfuscator

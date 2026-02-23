@@ -9,7 +9,7 @@ WORKDIR /app
 
 # 安装依赖
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # ─── 构建阶段：Next.js 构建 ───────────────────────────────────────
 FROM base AS builder
