@@ -27,7 +27,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "dayjs": "^1.11.13",
-    "fast-xml-parser": "^5.3.7",
+    "fast-xml-parser": "^5.3.8",
     "idb": "^8.0.2",
     "keyv": "^5.2.3",
     "lucide-react": "^0.575.0",
