@@ -30,7 +30,7 @@
     "fast-xml-parser": "^5.3.8",
     "idb": "^8.0.2",
     "keyv": "^5.2.3",
-    "lucide-react": "^0.575.0",
+    "lucide-react": "^0.576.0",
     "motion": "^12.34.3",
     "next": "16.1.6",
     "qrcode": "^1.5.4",
