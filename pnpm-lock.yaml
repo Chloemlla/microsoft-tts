@@ -40,7 +40,7 @@ importers:
         version: 1.2.15(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tailwindcss/line-clamp':
         specifier: ^0.4.4
-        version: 0.4.4(tailwindcss@4.2.2)
+        version: 0.4.4(tailwindcss@4.2.3)
       '@tanstack/react-query':
         specifier: ^5.96.2
         version: 5.96.2(react@19.2.4)
@@ -100,7 +100,7 @@ importers:
         version: 3.5.0
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.2.2)
+        version: 1.0.7(tailwindcss@4.2.3)
       uuid:
         specifier: ^14.0.0
         version: 14.0.0
@@ -142,8 +142,8 @@ importers:
         specifier: ^8
         version: 8.5.10
       tailwindcss:
-        specifier: ^4.2.2
-        version: 4.2.2
+        specifier: ^4.2.3
+        version: 4.2.3
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -3763,9 +3763,6 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
-  tailwindcss@4.2.2:
-    resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
-
   tailwindcss@4.2.3:
     resolution: {integrity: sha512-fA/NX5gMf0ooCLISgB0wScaWgaj6rjTN2SVAwleURjiya7ITNkV+VMmoHtKkldP6CIZoYCZyxb8zP/e2TWoEtQ==}
 
@@ -5064,9 +5061,9 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@tailwindcss/line-clamp@0.4.4(tailwindcss@4.2.2)':
+  '@tailwindcss/line-clamp@0.4.4(tailwindcss@4.2.3)':
     dependencies:
-      tailwindcss: 4.2.2
+      tailwindcss: 4.2.3
 
   '@tailwindcss/node@4.2.3':
     dependencies:
@@ -7824,11 +7821,9 @@ snapshots:
 
   tailwind-merge@3.5.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.2.2):
+  tailwindcss-animate@1.0.7(tailwindcss@4.2.3):
     dependencies:
-      tailwindcss: 4.2.2
-
-  tailwindcss@4.2.2: {}
+      tailwindcss: 4.2.3
 
   tailwindcss@4.2.3: {}
 
