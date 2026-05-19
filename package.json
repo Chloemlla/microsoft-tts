@@ -56,7 +56,7 @@
     "eslint-config-next": "16.2.6",
     "postcss": "^8",
     "tailwindcss": "^4.3.0",
-    "typescript": "^5",
+    "typescript": "^6",
     "vercel": "^53.4.0"
   },
   "optionalDependencies": {
