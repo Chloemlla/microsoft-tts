@@ -57,7 +57,7 @@
     "postcss": "^8",
     "tailwindcss": "^4.3.0",
     "typescript": "^6",
-    "vercel": "^53.4.0"
+    "vercel": "^54.1.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.9"
